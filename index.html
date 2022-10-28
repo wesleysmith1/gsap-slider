@@ -8,7 +8,7 @@
 <meta name="keywords" content="html tutorial template">
 <style>
     #slider {
-        background: green;
+        background: blue;
         height: 50px;
         width: 500px;
         border-radius: 25px;;
@@ -36,6 +36,7 @@
     <div id="thumb" style="transform: translate3d(150px, 0px, 0px);"></div>
 </div>
 <script>
+    let sliderWidth = 450
     function setScale(x) {
         document.getElementById("left").style.width = x + 50 + "px";
         // document.getElementById("thumb").style.left = x + "px"
@@ -58,6 +59,9 @@
             onDrag: function() {
                 document.getElementById("left").style.width = this.x + 50 + "px";
             },
+            onDragEnd: function() {
+                setScale(Math.round(this.x/sliderWidth))
+            }
         });
 
         setScale(200)
