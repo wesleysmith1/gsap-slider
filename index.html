@@ -9,23 +9,23 @@
 <style>
     #slider {
         background: blue;
-        height: 50px;
+        height: 25px;
         width: 500px;
         border-radius: 25px;;
     }
     #thumb {
         background: grey;
-        height: 50px;
-        width: 50px;
+        height: 25px;
+        width: 25px;
         border-radius: 25px;
         position: relative;
-        bottom: 50px;
+        bottom: 25px;
     }
     #left {
         background: red;
         border-radius: 25px;
         width: 200px;
-        height: 50px;
+        height: 25px;
     }
     .sliderRange {
         width: 500px;
@@ -46,11 +46,12 @@
     <div id="thumb" style="transform: translate3d(150px, 0px, 0px);"></div>
 </div>
 <script>
-    let sliderWidth = 450
+    let sliderWidth = 475
     function updateScaleColor(x) {
-        document.getElementById("left").style.width = x + 50 + "px";
+        document.getElementById("left").style.width = x + 25 + "px";
     }
     function setScale(x) {
+        console.log(x)
         // convert input from 0-100 to size of scale
         let convertedValue = Math.round(x/100*sliderWidth)
 
