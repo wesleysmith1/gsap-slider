@@ -37,34 +37,33 @@
 </div>
 <script>
     let sliderWidth = 450
-    function setScale(x) {
+    function updateScaleColor(x) {
         document.getElementById("left").style.width = x + 50 + "px";
-        // document.getElementById("thumb").style.left = x + "px"
-        draggable.x = x+"px"
-        TweenLite.set('#thumb',{x:x+"px"});
+    }
+    function setScale(x) {
+        // convert input from 0-100 to size of scale
+        let convertedValue = Math.round(x/100*sliderWidth)
+
+        // updated left background color
+        updateScaleColor(convertedValue)
+
+        TweenLite.set('#thumb',{x:convertedValue+"px"});
+
         draggable[0].update();
     }
     let draggable = Draggable.create(
         "#thumb", 
         {
-            type:"x", 
-            edgeResistance:1, 
             bounds:"#slider", 
-            lockAxis:true, 
-            inertia:true,
-            snap:function(value) {
-                //this function gets called by ThrowPropsPlugin when the mouse/finger is released and it plots where rotation should normally end and we can alter that value and return a new one instead. This gives us an easy way to apply custom snapping behavior with any logic we want. In this case, we'll just make sure the end value snaps to 90-degree increments but only when the "snap" checkbox is selected.
-                return 100;
-            },
             onDrag: function() {
-                document.getElementById("left").style.width = this.x + 50 + "px";
+                updateScaleColor(this.x)
             },
             onDragEnd: function() {
-                setScale(Math.round(this.x/sliderWidth))
+                setScale(Math.round(this.x/sliderWidth*100))
             }
         });
 
-        setScale(200)
+        setScale(50)
 </script>
 </body>
 </html>
