@@ -27,10 +27,20 @@
         width: 200px;
         height: 50px;
     }
+    .sliderRange {
+        width: 500px;
+        display: flex;
+        justify-content: space-between;
+    }
 </style>
 </head>
 <body>
 <h1>drag the slider</h1>
+<div class="sliderRange">
+    <div>0</div>
+    <div>&nbsp;&nbsp;&nbsp;&nbsp;50</div>
+    <div>100</div>
+</div>
 <div id="slider">
     <div id="left"></div>
     <div id="thumb" style="transform: translate3d(150px, 0px, 0px);"></div>
