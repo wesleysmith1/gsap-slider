@@ -7,13 +7,13 @@
 <meta name="description" content="Our first page">
 <meta name="keywords" content="html tutorial template">
 <style>
-    #slider {
+    .slider {
         background: blue;
         height: 25px;
-        width: 500px;
+        width: 300px;
         border-radius: 25px;;
     }
-    #thumb {
+    .thumb {
         background: grey;
         height: 25px;
         width: 25px;
@@ -21,14 +21,14 @@
         position: relative;
         bottom: 25px;
     }
-    #left {
+    .left {
         background: red;
         border-radius: 25px;
         width: 200px;
         height: 25px;
     }
     .sliderRange {
-        width: 500px;
+        width: 300px;
         display: flex;
         justify-content: space-between;
     }
@@ -41,40 +41,55 @@
     <div>&nbsp;&nbsp;&nbsp;&nbsp;50</div>
     <div>100</div>
 </div>
-<div id="slider">
-    <div id="left"></div>
-    <div id="thumb" style="transform: translate3d(150px, 0px, 0px);"></div>
+<div id="rslider" class="slider">
+    <div id="rleft" class="left"></div>
+    <div id="rthumb" class="thumb"></div>
 </div>
+<br>
+<div>Slider value: <span id="output"></span></div>
 <script>
+
+    class Slider {
+        constructor(sliderWidth, thumbRef, leftRef, boundsRef) {
+            this.leftRef = leftRef
+            this.thumbRef = thumbRef 
+            this.sliderWidth = sliderWidth
+            this.boundsRef = boundsRef
+            let that = this
+            this.draggable = Draggable.create(
+                that.thumbRef, 
+                {
+                    bounds: that.boundsRef, 
+                    onDrag: function() {
+                        that.updateBackground(this.x)
+                    },
+                    onDragEnd: function() {
+                        that.set(Math.round(this.x/that.sliderWidth*100))
+                    }
+                });
+            this.set(50)
+        }
+        updateBackground(x) {
+            document.getElementById(this.leftRef).style.width = x + 25 + "px";
+        }
+        set(x) {
+            // convert input from 0-100 to size of scale
+            let convertedValue = Math.round(x/100*this.sliderWidth)
+
+            // updated left background color
+            this.updateBackground(convertedValue)
+
+            TweenLite.set(this.thumbRef,{x:convertedValue+"px"});
+
+            this.draggable[0].update();
+
+            TweenLite.set("#output",{innerText:x});
+        }
+    }
+
+    let slider = new Slider(275, '#rthumb', 'rleft', '#rslider')
+
     let sliderWidth = 475
-    function updateScaleColor(x) {
-        document.getElementById("left").style.width = x + 25 + "px";
-    }
-    function setScale(x) {
-        console.log(x)
-        // convert input from 0-100 to size of scale
-        let convertedValue = Math.round(x/100*sliderWidth)
-
-        // updated left background color
-        updateScaleColor(convertedValue)
-
-        TweenLite.set('#thumb',{x:convertedValue+"px"});
-
-        draggable[0].update();
-    }
-    let draggable = Draggable.create(
-        "#thumb", 
-        {
-            bounds:"#slider", 
-            onDrag: function() {
-                updateScaleColor(this.x)
-            },
-            onDragEnd: function() {
-                setScale(Math.round(this.x/sliderWidth*100))
-            }
-        });
-
-        setScale(50)
 </script>
 </body>
 </html>
