@@ -7,60 +7,89 @@
 <meta name="description" content="Our first page">
 <meta name="keywords" content="html tutorial template">
 <style>
-    #slider {
-        background: green;
-        height: 50px;
-        width: 500px;
+    .slider {
+        background: blue;
+        height: 25px;
+        width: 300px;
         border-radius: 25px;;
     }
-    #thumb {
+    .thumb {
         background: grey;
-        height: 50px;
-        width: 50px;
+        height: 25px;
+        width: 25px;
         border-radius: 25px;
         position: relative;
-        bottom: 50px;
+        bottom: 25px;
     }
-    #left {
+    .left {
         background: red;
         border-radius: 25px;
         width: 200px;
-        height: 50px;
+        height: 25px;
+    }
+    .sliderRange {
+        width: 300px;
+        display: flex;
+        justify-content: space-between;
     }
 </style>
 </head>
 <body>
 <h1>drag the slider</h1>
-<div id="slider">
-    <div id="left"></div>
-    <div id="thumb" style="transform: translate3d(150px, 0px, 0px);"></div>
+<div class="sliderRange">
+    <div>0</div>
+    <div>&nbsp;&nbsp;&nbsp;&nbsp;50</div>
+    <div>100</div>
 </div>
+<div id="rslider" class="slider">
+    <div id="rleft" class="left"></div>
+    <div id="rthumb" class="thumb"></div>
+</div>
+<br>
+<div>Slider value: <span id="output"></span></div>
 <script>
-    function setScale(x) {
-        document.getElementById("left").style.width = x + 50 + "px";
-        // document.getElementById("thumb").style.left = x + "px"
-        draggable.x = x+"px"
-        TweenLite.set('#thumb',{x:x+"px"});
-        draggable[0].update();
-    }
-    let draggable = Draggable.create(
-        "#thumb", 
-        {
-            type:"x", 
-            edgeResistance:1, 
-            bounds:"#slider", 
-            lockAxis:true, 
-            inertia:true,
-            snap:function(value) {
-                //this function gets called by ThrowPropsPlugin when the mouse/finger is released and it plots where rotation should normally end and we can alter that value and return a new one instead. This gives us an easy way to apply custom snapping behavior with any logic we want. In this case, we'll just make sure the end value snaps to 90-degree increments but only when the "snap" checkbox is selected.
-                return 100;
-            },
-            onDrag: function() {
-                document.getElementById("left").style.width = this.x + 50 + "px";
-            },
-        });
 
-        setScale(200)
+    class Slider {
+        constructor(sliderWidth, thumbRef, leftRef, boundsRef) {
+            this.leftRef = leftRef
+            this.thumbRef = thumbRef 
+            this.sliderWidth = sliderWidth
+            this.boundsRef = boundsRef
+            let that = this
+            this.draggable = Draggable.create(
+                that.thumbRef, 
+                {
+                    bounds: that.boundsRef, 
+                    onDrag: function() {
+                        that.updateBackground(this.x)
+                    },
+                    onDragEnd: function() {
+                        that.set(Math.round(this.x/that.sliderWidth*100))
+                    }
+                });
+            this.set(50)
+        }
+        updateBackground(x) {
+            document.getElementById(this.leftRef).style.width = x + 25 + "px";
+        }
+        set(x) {
+            // convert input from 0-100 to size of scale
+            let convertedValue = Math.round(x/100*this.sliderWidth)
+
+            // updated left background color
+            this.updateBackground(convertedValue)
+
+            TweenLite.set(this.thumbRef,{x:convertedValue+"px"});
+
+            this.draggable[0].update();
+
+            TweenLite.set("#output",{innerText:x});
+        }
+    }
+
+    let slider = new Slider(275, '#rthumb', 'rleft', '#rslider')
+
+    let sliderWidth = 475
 </script>
 </body>
 </html>
